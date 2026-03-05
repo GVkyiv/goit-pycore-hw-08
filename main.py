@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from collections import UserDict
 from datetime import date, datetime, timedelta
@@ -6,15 +6,15 @@ from functools import wraps
 import pickle
 from typing import Any, Callable, TypeVar
 
-# Узагальнений тип для декоратора: приймає функцію, що повертає str
+# РЈР·Р°РіР°Р»СЊРЅРµРЅРёР№ С‚РёРї РґР»СЏ РґРµРєРѕСЂР°С‚РѕСЂР°: РїСЂРёР№РјР°С” С„СѓРЅРєС†С–СЋ, С‰Рѕ РїРѕРІРµСЂС‚Р°С” str
 T = TypeVar("T", bound=Callable[..., str])
 DATA_FILE = "addressbook.pkl"
 
 
 class Field:
     """
-    Базовий клас для всіх полів (Name, Phone, Birthday тощо).
-    Зберігає значення та дозволяє гарно виводити його як рядок.
+    Р‘Р°Р·РѕРІРёР№ РєР»Р°СЃ РґР»СЏ РІСЃС–С… РїРѕР»С–РІ (Name, Phone, Birthday С‚РѕС‰Рѕ).
+    Р—Р±РµСЂС–РіР°С” Р·РЅР°С‡РµРЅРЅСЏ С‚Р° РґРѕР·РІРѕР»СЏС” РіР°СЂРЅРѕ РІРёРІРѕРґРёС‚Рё Р№РѕРіРѕ СЏРє СЂСЏРґРѕРє.
     """
     value: Any
 
@@ -26,14 +26,14 @@ class Field:
 
 
 class Name(Field):
-    """Поле для зберігання імені контакту."""
+    """РџРѕР»Рµ РґР»СЏ Р·Р±РµСЂС–РіР°РЅРЅСЏ С–РјРµРЅС– РєРѕРЅС‚Р°РєС‚Сѓ."""
     pass
 
 
 class Phone(Field):
     """
-    Поле для зберігання телефону.
-    Валідація: телефон має бути рядком з рівно 10 цифр.
+    РџРѕР»Рµ РґР»СЏ Р·Р±РµСЂС–РіР°РЅРЅСЏ С‚РµР»РµС„РѕРЅСѓ.
+    Р’Р°Р»С–РґР°С†С–СЏ: С‚РµР»РµС„РѕРЅ РјР°С” Р±СѓС‚Рё СЂСЏРґРєРѕРј Р· СЂС–РІРЅРѕ 10 С†РёС„СЂ.
     """
 
     def __init__(self, value: str) -> None:
@@ -44,27 +44,27 @@ class Phone(Field):
 
 class Birthday(Field):
     """
-    Поле для дати народження.
-    Валідація: формат DD.MM.YYYY.
-    Усередині зберігаємо не рядок, а об’єкт date (зручніше для розрахунків).
+    РџРѕР»Рµ РґР»СЏ РґР°С‚Рё РЅР°СЂРѕРґР¶РµРЅРЅСЏ.
+    Р’Р°Р»С–РґР°С†С–СЏ: С„РѕСЂРјР°С‚ DD.MM.YYYY.
+    РЈСЃРµСЂРµРґРёРЅС– Р·Р±РµСЂС–РіР°С”РјРѕ РЅРµ СЂСЏРґРѕРє, Р° РѕР±вЂ™С”РєС‚ date (Р·СЂСѓС‡РЅС–С€Рµ РґР»СЏ СЂРѕР·СЂР°С…СѓРЅРєС–РІ).
     """
 
     def __init__(self, value: str) -> None:
         try:
             parsed_date = datetime.strptime(value, "%d.%m.%Y").date()
         except ValueError as error:
-            # Піднімаємо "людську" помилку з правильним повідомленням
+            # РџС–РґРЅС–РјР°С”РјРѕ "Р»СЋРґСЃСЊРєСѓ" РїРѕРјРёР»РєСѓ Р· РїСЂР°РІРёР»СЊРЅРёРј РїРѕРІС–РґРѕРјР»РµРЅРЅСЏРј
             raise ValueError("Invalid date format. Use DD.MM.YYYY") from error
         super().__init__(parsed_date)
 
     def __str__(self) -> str:
-        # При виведенні назад показуємо як DD.MM.YYYY
+        # РџСЂРё РІРёРІРµРґРµРЅРЅС– РЅР°Р·Р°Рґ РїРѕРєР°Р·СѓС”РјРѕ СЏРє DD.MM.YYYY
         return self.value.strftime("%d.%m.%Y")
 
 
 class Record:
     """
-    Запис адресної книги: ім'я, список телефонів, (опційно) день народження.
+    Р—Р°РїРёСЃ Р°РґСЂРµСЃРЅРѕС— РєРЅРёРіРё: С–Рј'СЏ, СЃРїРёСЃРѕРє С‚РµР»РµС„РѕРЅС–РІ, (РѕРїС†С–Р№РЅРѕ) РґРµРЅСЊ РЅР°СЂРѕРґР¶РµРЅРЅСЏ.
     """
 
     def __init__(self, name: str) -> None:
@@ -73,37 +73,37 @@ class Record:
         self.birthday: Birthday | None = None
 
     def add_phone(self, phone: str) -> None:
-        # Додаємо телефон, при створенні Phone відбудеться валідація
+        # Р”РѕРґР°С”РјРѕ С‚РµР»РµС„РѕРЅ, РїСЂРё СЃС‚РІРѕСЂРµРЅРЅС– Phone РІС–РґР±СѓРґРµС‚СЊСЃСЏ РІР°Р»С–РґР°С†С–СЏ
         self.phones.append(Phone(phone))
 
     def remove_phone(self, phone: str) -> None:
-        # Видаляємо телефон, якщо його не знайдено — помилка
+        # Р’РёРґР°Р»СЏС”РјРѕ С‚РµР»РµС„РѕРЅ, СЏРєС‰Рѕ Р№РѕРіРѕ РЅРµ Р·РЅР°Р№РґРµРЅРѕ вЂ” РїРѕРјРёР»РєР°
         phone_to_remove = self.find_phone(phone)
         if phone_to_remove is None:
             raise ValueError("Phone number not found.")
         self.phones.remove(phone_to_remove)
 
     def edit_phone(self, old_phone: str, new_phone: str) -> None:
-        # Знаходимо старий телефон і замінюємо його значенням нового
+        # Р—РЅР°С…РѕРґРёРјРѕ СЃС‚Р°СЂРёР№ С‚РµР»РµС„РѕРЅ С– Р·Р°РјС–РЅСЋС”РјРѕ Р№РѕРіРѕ Р·РЅР°С‡РµРЅРЅСЏРј РЅРѕРІРѕРіРѕ
         phone_to_edit = self.find_phone(old_phone)
         if phone_to_edit is None:
             raise ValueError("Phone number not found.")
-        # Важливо: новий номер також перевіряється через Phone(...)
+        # Р’Р°Р¶Р»РёРІРѕ: РЅРѕРІРёР№ РЅРѕРјРµСЂ С‚Р°РєРѕР¶ РїРµСЂРµРІС–СЂСЏС”С‚СЊСЃСЏ С‡РµСЂРµР· Phone(...)
         phone_to_edit.value = Phone(new_phone).value
 
     def find_phone(self, phone: str) -> Phone | None:
-        # Повертаємо об'єкт Phone, якщо знайдено, або None
+        # РџРѕРІРµСЂС‚Р°С”РјРѕ РѕР±'С”РєС‚ Phone, СЏРєС‰Рѕ Р·РЅР°Р№РґРµРЅРѕ, Р°Р±Рѕ None
         for saved_phone in self.phones:
             if saved_phone.value == phone:
                 return saved_phone
         return None
 
     def add_birthday(self, birthday: str) -> None:
-        # Додаємо/оновлюємо день народження (валідність перевіряє Birthday)
+        # Р”РѕРґР°С”РјРѕ/РѕРЅРѕРІР»СЋС”РјРѕ РґРµРЅСЊ РЅР°СЂРѕРґР¶РµРЅРЅСЏ (РІР°Р»С–РґРЅС–СЃС‚СЊ РїРµСЂРµРІС–СЂСЏС” Birthday)
         self.birthday = Birthday(birthday)
 
     def __str__(self) -> str:
-        # Формуємо зручний рядок для виводу запису
+        # Р¤РѕСЂРјСѓС”РјРѕ Р·СЂСѓС‡РЅРёР№ СЂСЏРґРѕРє РґР»СЏ РІРёРІРѕРґСѓ Р·Р°РїРёСЃСѓ
         phones = "; ".join(phone.value for phone in self.phones) or "no phones"
         birthday = str(self.birthday) if self.birthday else "not set"
         return f"Contact name: {self.name.value}, phones: {phones}, birthday: {birthday}"
@@ -111,22 +111,22 @@ class Record:
 
 class AddressBook(UserDict):
     """
-    Адресна книга — це словник (name -> Record).
-    Наслідуємось від UserDict, щоб мати стандартну поведінку словника.
+    РђРґСЂРµСЃРЅР° РєРЅРёРіР° вЂ” С†Рµ СЃР»РѕРІРЅРёРє (name -> Record).
+    РќР°СЃР»С–РґСѓС”РјРѕСЃСЊ РІС–Рґ UserDict, С‰РѕР± РјР°С‚Рё СЃС‚Р°РЅРґР°СЂС‚РЅСѓ РїРѕРІРµРґС–РЅРєСѓ СЃР»РѕРІРЅРёРєР°.
     """
 
     data: dict[str, Record]
 
     def add_record(self, record: Record) -> None:
-        # Додаємо запис у словник за ключем імені
+        # Р”РѕРґР°С”РјРѕ Р·Р°РїРёСЃ Сѓ СЃР»РѕРІРЅРёРє Р·Р° РєР»СЋС‡РµРј С–РјРµРЅС–
         self.data[record.name.value] = record
 
     def find(self, name: str) -> Record | None:
-        # Шукаємо запис за ім’ям. Якщо нема — None
+        # РЁСѓРєР°С”РјРѕ Р·Р°РїРёСЃ Р·Р° С–РјвЂ™СЏРј. РЇРєС‰Рѕ РЅРµРјР° вЂ” None
         return self.data.get(name)
 
     def delete(self, name: str) -> None:
-        # Видаляємо запис за ім’ям, якщо він існує
+        # Р’РёРґР°Р»СЏС”РјРѕ Р·Р°РїРёСЃ Р·Р° С–РјвЂ™СЏРј, СЏРєС‰Рѕ РІС–РЅ С–СЃРЅСѓС”
         if name in self.data:
             del self.data[name]
 
@@ -139,38 +139,38 @@ class AddressBook(UserDict):
 
     def get_upcoming_birthdays(self) -> list[dict[str, str]]:
         """
-        Повертає список людей, яких треба привітати протягом наступних 7 днів.
-        Якщо день народження припадає на вихідні (Сб/Нд),
-        дата привітання переноситься на найближчий понеділок.
+        РџРѕРІРµСЂС‚Р°С” СЃРїРёСЃРѕРє Р»СЋРґРµР№, СЏРєРёС… С‚СЂРµР±Р° РїСЂРёРІС–С‚Р°С‚Рё РїСЂРѕС‚СЏРіРѕРј РЅР°СЃС‚СѓРїРЅРёС… 7 РґРЅС–РІ.
+        РЇРєС‰Рѕ РґРµРЅСЊ РЅР°СЂРѕРґР¶РµРЅРЅСЏ РїСЂРёРїР°РґР°С” РЅР° РІРёС…С–РґРЅС– (РЎР±/РќРґ),
+        РґР°С‚Р° РїСЂРёРІС–С‚Р°РЅРЅСЏ РїРµСЂРµРЅРѕСЃРёС‚СЊСЃСЏ РЅР° РЅР°Р№Р±Р»РёР¶С‡РёР№ РїРѕРЅРµРґС–Р»РѕРє.
         """
         today = date.today()
         upcoming_birthdays: list[dict[str, str]] = []
 
         for record in self.data.values():
-            # Пропускаємо контакти без дня народження
+            # РџСЂРѕРїСѓСЃРєР°С”РјРѕ РєРѕРЅС‚Р°РєС‚Рё Р±РµР· РґРЅСЏ РЅР°СЂРѕРґР¶РµРЅРЅСЏ
             if record.birthday is None:
                 continue
 
-            # День народження цього року (тільки день/місяць, рік = поточний)
+            # Р”РµРЅСЊ РЅР°СЂРѕРґР¶РµРЅРЅСЏ С†СЊРѕРіРѕ СЂРѕРєСѓ (С‚С–Р»СЊРєРё РґРµРЅСЊ/РјС–СЃСЏС†СЊ, СЂС–Рє = РїРѕС‚РѕС‡РЅРёР№)
             birthday_this_year = self._get_birthday_for_year(record.birthday.value, today.year)
 
-            # Якщо вже минув у цьому році — беремо наступний рік
+            # РЇРєС‰Рѕ РІР¶Рµ РјРёРЅСѓРІ Сѓ С†СЊРѕРјСѓ СЂРѕС†С– вЂ” Р±РµСЂРµРјРѕ РЅР°СЃС‚СѓРїРЅРёР№ СЂС–Рє
             if birthday_this_year < today:
                 birthday_this_year = self._get_birthday_for_year(
                     record.birthday.value, today.year + 1
                 )
 
-            # Скільки днів залишилось до ДН
+            # РЎРєС–Р»СЊРєРё РґРЅС–РІ Р·Р°Р»РёС€РёР»РѕСЃСЊ РґРѕ Р”Рќ
             days_until_birthday = (birthday_this_year - today).days
 
-            # Беремо тільки наступний тиждень (0..7)
+            # Р‘РµСЂРµРјРѕ С‚С–Р»СЊРєРё РЅР°СЃС‚СѓРїРЅРёР№ С‚РёР¶РґРµРЅСЊ (0..7)
             if days_until_birthday > 7:
                 continue
 
-            # Дата привітання: за замовчуванням сама дата ДН
+            # Р”Р°С‚Р° РїСЂРёРІС–С‚Р°РЅРЅСЏ: Р·Р° Р·Р°РјРѕРІС‡СѓРІР°РЅРЅСЏРј СЃР°РјР° РґР°С‚Р° Р”Рќ
             congratulation_date = birthday_this_year
 
-            # Якщо це субота (5) або неділя (6) — переносимо на понеділок
+            # РЇРєС‰Рѕ С†Рµ СЃСѓР±РѕС‚Р° (5) Р°Р±Рѕ РЅРµРґС–Р»СЏ (6) вЂ” РїРµСЂРµРЅРѕСЃРёРјРѕ РЅР° РїРѕРЅРµРґС–Р»РѕРє
             if congratulation_date.weekday() >= 5:
                 congratulation_date += timedelta(days=7 - congratulation_date.weekday())
 
@@ -181,7 +181,7 @@ class AddressBook(UserDict):
                 }
             )
 
-        # Сортуємо за датою привітання
+        # РЎРѕСЂС‚СѓС”РјРѕ Р·Р° РґР°С‚РѕСЋ РїСЂРёРІС–С‚Р°РЅРЅСЏ
         return sorted(
             upcoming_birthdays,
             key=lambda item: datetime.strptime(item["congratulation_date"], "%d.%m.%Y"),
@@ -190,8 +190,8 @@ class AddressBook(UserDict):
 
 def input_error(func: T) -> T:
     """
-    Декоратор для обробки помилок введення.
-    Перехоплює найтиповіші винятки і повертає зрозуміле повідомлення.
+    Р”РµРєРѕСЂР°С‚РѕСЂ РґР»СЏ РѕР±СЂРѕР±РєРё РїРѕРјРёР»РѕРє РІРІРµРґРµРЅРЅСЏ.
+    РџРµСЂРµС…РѕРїР»СЋС” РЅР°Р№С‚РёРїРѕРІС–С€С– РІРёРЅСЏС‚РєРё С– РїРѕРІРµСЂС‚Р°С” Р·СЂРѕР·СѓРјС–Р»Рµ РїРѕРІС–РґРѕРјР»РµРЅРЅСЏ.
     """
 
     @wraps(func)
@@ -210,8 +210,8 @@ def input_error(func: T) -> T:
 
 def parse_input(user_input: str) -> tuple[str, list[str]]:
     """
-    Розбирає введений рядок на команду та аргументи.
-    Приклад: "add John 0501234567" -> ("add", ["John", "0501234567"])
+    Р РѕР·Р±РёСЂР°С” РІРІРµРґРµРЅРёР№ СЂСЏРґРѕРє РЅР° РєРѕРјР°РЅРґСѓ С‚Р° Р°СЂРіСѓРјРµРЅС‚Рё.
+    РџСЂРёРєР»Р°Рґ: "add John 0501234567" -> ("add", ["John", "0501234567"])
     """
     parts = user_input.strip().split()
     if not parts:
@@ -223,8 +223,8 @@ def parse_input(user_input: str) -> tuple[str, list[str]]:
 @input_error
 def add_contact(args: list[str], book: AddressBook) -> str:
     """
-    add [ім'я] [телефон]
-    Додає новий контакт або додає телефон до існуючого.
+    add [С–Рј'СЏ] [С‚РµР»РµС„РѕРЅ]
+    Р”РѕРґР°С” РЅРѕРІРёР№ РєРѕРЅС‚Р°РєС‚ Р°Р±Рѕ РґРѕРґР°С” С‚РµР»РµС„РѕРЅ РґРѕ С–СЃРЅСѓСЋС‡РѕРіРѕ.
     """
     name, phone, *_ = args
     record = book.find(name)
@@ -241,8 +241,8 @@ def add_contact(args: list[str], book: AddressBook) -> str:
 @input_error
 def change_contact(args: list[str], book: AddressBook) -> str:
     """
-    change [ім'я] [старий телефон] [новий телефон]
-    Замінює телефон у контакті.
+    change [С–Рј'СЏ] [СЃС‚Р°СЂРёР№ С‚РµР»РµС„РѕРЅ] [РЅРѕРІРёР№ С‚РµР»РµС„РѕРЅ]
+    Р—Р°РјС–РЅСЋС” С‚РµР»РµС„РѕРЅ Сѓ РєРѕРЅС‚Р°РєС‚С–.
     """
     name, old_phone, new_phone, *_ = args
     record = book.find(name)
@@ -255,8 +255,8 @@ def change_contact(args: list[str], book: AddressBook) -> str:
 @input_error
 def show_phone(args: list[str], book: AddressBook) -> str:
     """
-    phone [ім'я]
-    Повертає телефони контакту (через '; ').
+    phone [С–Рј'СЏ]
+    РџРѕРІРµСЂС‚Р°С” С‚РµР»РµС„РѕРЅРё РєРѕРЅС‚Р°РєС‚Сѓ (С‡РµСЂРµР· '; ').
     """
     name, *_ = args
     record = book.find(name)
@@ -270,7 +270,7 @@ def show_phone(args: list[str], book: AddressBook) -> str:
 def show_all(book: AddressBook) -> str:
     """
     all
-    Виводить всі контакти (кожен Record як окремий рядок).
+    Р’РёРІРѕРґРёС‚СЊ РІСЃС– РєРѕРЅС‚Р°РєС‚Рё (РєРѕР¶РµРЅ Record СЏРє РѕРєСЂРµРјРёР№ СЂСЏРґРѕРє).
     """
     if not book.data:
         return "Address book is empty."
@@ -280,8 +280,8 @@ def show_all(book: AddressBook) -> str:
 @input_error
 def add_birthday(args: list[str], book: AddressBook) -> str:
     """
-    add-birthday [ім'я] [дата DD.MM.YYYY]
-    Додає (або оновлює) день народження для контакту.
+    add-birthday [С–Рј'СЏ] [РґР°С‚Р° DD.MM.YYYY]
+    Р”РѕРґР°С” (Р°Р±Рѕ РѕРЅРѕРІР»СЋС”) РґРµРЅСЊ РЅР°СЂРѕРґР¶РµРЅРЅСЏ РґР»СЏ РєРѕРЅС‚Р°РєС‚Сѓ.
     """
     name, birthday, *_ = args
     record = book.find(name)
@@ -294,8 +294,8 @@ def add_birthday(args: list[str], book: AddressBook) -> str:
 @input_error
 def show_birthday(args: list[str], book: AddressBook) -> str:
     """
-    show-birthday [ім'я]
-    Показує день народження контакту.
+    show-birthday [С–Рј'СЏ]
+    РџРѕРєР°Р·СѓС” РґРµРЅСЊ РЅР°СЂРѕРґР¶РµРЅРЅСЏ РєРѕРЅС‚Р°РєС‚Сѓ.
     """
     name, *_ = args
     record = book.find(name)
@@ -310,7 +310,7 @@ def show_birthday(args: list[str], book: AddressBook) -> str:
 def birthdays(_: list[str], book: AddressBook) -> str:
     """
     birthdays
-    Показує дні народження на наступний тиждень.
+    РџРѕРєР°Р·СѓС” РґРЅС– РЅР°СЂРѕРґР¶РµРЅРЅСЏ РЅР° РЅР°СЃС‚СѓРїРЅРёР№ С‚РёР¶РґРµРЅСЊ.
     """
     upcoming = book.get_upcoming_birthdays()
     if not upcoming:
@@ -319,14 +319,16 @@ def birthdays(_: list[str], book: AddressBook) -> str:
 
 
 def save_data(book: AddressBook, filename: str = DATA_FILE) -> None:
+    """Зберігає адресну книгу у файл за допомогою pickle."""
     with open(filename, "wb") as file:
         pickle.dump(book, file)
 
 
 def load_data(filename: str = DATA_FILE) -> AddressBook:
+    """Завантажує адресну книгу з файла або повертає нову, якщо файл недоступний."""
     try:
         with open(filename, "rb") as file:
-            data = pickle.load(file)
+            data: Any = pickle.load(file)
             if isinstance(data, AddressBook):
                 return data
     except FileNotFoundError:
@@ -337,9 +339,9 @@ def load_data(filename: str = DATA_FILE) -> AddressBook:
 
 def main() -> None:
     """
-    Головний цикл програми: читає команди користувача і викликає відповідні обробники.
+    Р“РѕР»РѕРІРЅРёР№ С†РёРєР» РїСЂРѕРіСЂР°РјРё: С‡РёС‚Р°С” РєРѕРјР°РЅРґРё РєРѕСЂРёСЃС‚СѓРІР°С‡Р° С– РІРёРєР»РёРєР°С” РІС–РґРїРѕРІС–РґРЅС– РѕР±СЂРѕР±РЅРёРєРё.
     """
-    book = load_data()
+    book: AddressBook = load_data()
     print("Welcome to the assistant bot!")
 
     while True:
@@ -374,6 +376,9 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+
 
 
 
